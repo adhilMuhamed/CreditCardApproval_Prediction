@@ -18,7 +18,35 @@ select * from final_data where Gender = 'M' AND Housing_type  = 'With parents';
 
 # 4. Please list the top five people having the highest income.
 
-select * from final_data order by Annual_income DESC Limit 5;
+WITH RankedIncome AS (
+    SELECT
+        Ind_id,
+        Annual_income,
+        RANK() OVER (ORDER BY Annual_income DESC) AS IncomeRank
+    FROM
+        final_data -- Replace with your table name
+)
+SELECT
+    Ind_id,
+    Annual_income
+FROM
+    RankedIncome
+WHERE
+    IncomeRank <= 5;
+    
+# 5. How many married people are having bad credit?
+
+select * from final_data where Marital_status = 'Married' AND label  = 0 ;
+
+# 6.What is the highest education level and what is the total count?
+
+select Education , count(Education) AS total_count from final_data group by Education;
+
+# 7. Between married males and females, who is having more bad credit? 
+
+select Marital_status,label, Gender , count(Gender) As Count from final_data where Marital_status = 'Married' AND label  = 0 group by Gender;
+
+
 
 
 
